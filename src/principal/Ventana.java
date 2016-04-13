@@ -133,7 +133,8 @@ public class Ventana extends JFrame implements ActionListener {
     {
         Sintactico sintactico = new Sintactico(tablaResultados);
         sintactico.setEntrada(entrada);
-        sintactico.Gramatica_3();
+        //sintactico.Gramatica_3();
+        sintactico.analisisSintactico();
     }
 
 }//fin de la clase Ventana
