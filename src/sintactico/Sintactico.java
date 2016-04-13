@@ -59,8 +59,6 @@ public class Sintactico {
         DefaultTableModel modeloTabla = (DefaultTableModel)tablaResultados.getModel();
         Object[] filas = new Object[3];
 
-        //System.out.println("Cuajo: " + );
-
         accion = 0;
         pila.push(new Terminal(TipoSimbolo.PESOS, "$"));
         pila.push(new Estado(0));
@@ -86,15 +84,12 @@ public class Sintactico {
                 elementosEnPila += elementos[i].getElemento();
             }
 
-
-
             filas[0] = elementosEnPila;
             filas[1] = lexico.getSimbolo();
             filas[2] = accion;
 
             modeloTabla.addRow(filas);
             tablaResultados.setModel(modeloTabla);
-            //System.out.printf("%50s%10s%10s\n", elementosEnPila, lexico.simbolo, accion);
 
             if(accion > 0) // desplazamiento
             {
@@ -360,8 +355,6 @@ public class Sintactico {
 
             if(accion == 0)
                 return;
-
-
 
         }//fin de while
 
