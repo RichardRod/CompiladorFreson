@@ -4,12 +4,62 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+public class Arbol
+{
+    private Nodo raiz;
+
+    public void insertar(Nodo elementoNuevo)
+    {
+        //System.out.println("INSERCION");
+        List<Nodo> aux = new LinkedList<>();
+        List<Nodo> hijos1 = new LinkedList<>();
+        List<Nodo> hijos2 = new LinkedList<>();
+        System.out.println(elementoNuevo.simbolo);
+
+        for(int i = 0; i < elementoNuevo.hijos.size(); i++){
+            System.out.println(elementoNuevo.hijos.get(i).simbolo);
+            aux = elementoNuevo.hijos.get(i).hijos;
+
+            if(elementoNuevo.hijos.get(i).hijos.size() > 0)
+            {
+                hijos1 = aux;
+            }
+        }
+
+        System.out.println("Hijos: " + aux.size());
+
+        for(int i = 0; i < aux.size(); i++){
+            System.out.println(aux.get(i).simbolo);
+        }
+
+        System.out.println("------------");
+
+
+        elementoNuevo.nodoSiguiente = raiz;
+        raiz = elementoNuevo;
+    }
+
+    public void imprimir(Nodo recorrido)
+    {
+        if(recorrido != null)
+        {
+            imprimir(recorrido.nodoSiguiente);
+            System.out.println(recorrido.simbolo + " - ");
+        }
+    }
+
+    public void imprimir()
+    {
+        imprimir(raiz);
+    }
+}//fin de la clase Arbol
+
 class Nodo
 {
     //atributos
-    Nodo nodoIzquierdo;
+    Nodo nodoSiguiente;
     public String simbolo;
-    Nodo nodoDerecho;
+
     public List<Nodo> hijos = new LinkedList<>();
 
     //constructor sin parametros
@@ -23,12 +73,11 @@ class Nodo
     }//fin del constrcutor parametrizado
 
 
-
 }//fin de la clase Nodo
 
-class Programa extends Nodo
-{
-    public Programa(Stack<ElementoPila> pila){
+class Programa extends Nodo {
+    public Programa(Stack<ElementoPila> pila) {
+        super();
         simbolo = "<Programa>";
         pila.pop();
         hijos.add(pila.pop().getNodo());
@@ -36,9 +85,9 @@ class Programa extends Nodo
 }//fin de la clase Programa
 
 class Identificador extends Nodo {
-
     //constructor
     public Identificador(Stack<ElementoPila> pila) {
+        super();
         pila.pop();
         simbolo = ((Terminal) pila.pop()).getElemento();
         simbolo = "<Identificador> " + simbolo;
@@ -47,9 +96,9 @@ class Identificador extends Nodo {
 }//fin de la clase Identificador
 
 class Entero extends Nodo {
-
     //constructor
     public Entero(Stack<ElementoPila> pila) {
+        super();
         pila.pop();
         simbolo = ((Terminal) pila.pop()).getElemento();
         simbolo = "<Entero> " + simbolo;
@@ -58,20 +107,19 @@ class Entero extends Nodo {
 }//fin de la clase Entero
 
 class Real extends Nodo {
-
     //constructor
     public Real(Stack<ElementoPila> pila) {
+        super();
         pila.pop();
         simbolo = ((Terminal) pila.pop()).getElemento();
         simbolo = "<Real> " + simbolo;
     }//fin del constrcutor
-
 }//fin de la clase Real
 
 class Cadena extends Nodo {
-
     //constructor
     public Cadena(Stack<ElementoPila> pila) {
+        super();
         pila.pop();
         simbolo = ((Terminal) pila.pop()).getElemento();
         simbolo = "<Cadena> " + simbolo;
@@ -79,10 +127,11 @@ class Cadena extends Nodo {
 
 }//fin de la clase Cadena
 
-class Definiciones extends Nodo
-{
+class Definiciones extends Nodo {
+    //constructor
+    public Definiciones(Stack<ElementoPila> pila) {
 
-    public Definiciones(Stack<ElementoPila> pila){
+        super();
 
         simbolo = "<Definiciones>";
 
@@ -92,15 +141,17 @@ class Definiciones extends Nodo
         Nodo definicion = pila.pop().getNodo();
 
         hijos.add(definicion);
-        for(int i = 0; i < definiciones.hijos.size(); i++){
+        for (int i = 0; i < definiciones.hijos.size(); i++) {
             hijos.add(definiciones.hijos.get(i));
         }//fin de for
     }//fin del constructor
 }//fin de la clase Definiciones
 
-class DefinicionesLocales extends Nodo
-{
-    public DefinicionesLocales(Stack<ElementoPila> pila){
+class DefinicionesLocales extends Nodo {
+    //constructor
+    public DefinicionesLocales(Stack<ElementoPila> pila) {
+        super();
+
         simbolo = "<DefLocales>";
 
         pila.pop();
@@ -109,65 +160,15 @@ class DefinicionesLocales extends Nodo
         Nodo definicionLocal = pila.pop().getNodo();
 
         hijos.add(definicionLocal);
-        for(int i = 0; i < definicionesLocales.hijos.size(); i++){
+        for (int i = 0; i < definicionesLocales.hijos.size(); i++) {
             hijos.add(definicionesLocales.hijos.get(i));
         }//fin de for
-    }
-}
-
-class Suma extends Nodo {
-
-    String operador;
-
-    //constructor
-    public Suma(Stack<ElementoPila> pila) {
-
-        simbolo = "<Suma>";
-        pila.pop();
-        nodoDerecho = (pila.pop().getNodo());
-        pila.pop();
-        operador = pila.pop().getElemento();
-        pila.pop();
-        nodoIzquierdo = (pila.pop().getNodo());
-
-        System.out.println(simbolo + " " + operador);
-        System.out.println("\t" + nodoIzquierdo.simbolo);
-        System.out.println("\t" + nodoDerecho.simbolo);
-
     }//fin del constructor
+}//fin de la clase DefinicionesLocales
 
-}//fin de la clase Suma
-
-class Multiplicacion extends Nodo {
-
-    String operador;
-
-    //constructor
-    public Multiplicacion(Stack<ElementoPila> pila) {
-        simbolo = "<Multiplicacion>";
-        pila.pop();
-        nodoDerecho = (pila.pop().getNodo());
-        pila.pop();
-        operador = pila.pop().getElemento();
-        pila.pop();
-        nodoIzquierdo = (pila.pop().getNodo());
-
-        System.out.println(simbolo + " " + operador);
-        System.out.println("\t" + nodoIzquierdo.simbolo);
-        System.out.println("\t" + nodoDerecho.simbolo);
-
-    }//fin del constructor
-}//fin de la clase Multiplicacion
-
-class DefVar extends Nodo
-{
-
-}//fin de la clase DefVar
-
-class ExpresionOperadoresBinarios extends Nodo
-{
-    public ExpresionOperadoresBinarios(Stack<ElementoPila> pila)
-    {
+class ExpresionOperadoresBinarios extends Nodo {
+    public ExpresionOperadoresBinarios(Stack<ElementoPila> pila) {
+        super();
         simbolo = "<Expresion>";
 
         pila.pop();
@@ -183,18 +184,17 @@ class ExpresionOperadoresBinarios extends Nodo
 
         hijos.add(expresion);
     }
-}
+}//fin de la clase ExpresionOperadoresBinarios
 
-class OperadorAdicion extends ExpresionOperadoresBinarios
-{
-    public OperadorAdicion(Stack<ElementoPila> pila){
+class OperadorAdicion extends ExpresionOperadoresBinarios {
+    public OperadorAdicion(Stack<ElementoPila> pila) {
         super(pila);
     }
 }//fin de la clase OperadorAdicion
 
-class OperadorAdicionDos extends Nodo
-{
-    public OperadorAdicionDos(Stack<ElementoPila> pila){
+class OperadorAdicionDos extends Nodo {
+    public OperadorAdicionDos(Stack<ElementoPila> pila) {
+        super();
         simbolo = "<Expresion>";
 
         pila.pop();
@@ -207,45 +207,40 @@ class OperadorAdicionDos extends Nodo
     }//fin del constructor
 }//fin de la clase OperadorAdicionDos
 
-class OperadorMultiplicacion extends ExpresionOperadoresBinarios
-{
-    public OperadorMultiplicacion(Stack<ElementoPila> pila){
+class OperadorMultiplicacion extends ExpresionOperadoresBinarios {
+    public OperadorMultiplicacion(Stack<ElementoPila> pila) {
         super(pila);
 
     }
 }//fin de la clase OperadorMultiplicacion
 
-class OperadorRelacional extends ExpresionOperadoresBinarios
-{
-    public OperadorRelacional(Stack<ElementoPila> pila){
+class OperadorRelacional extends ExpresionOperadoresBinarios {
+    public OperadorRelacional(Stack<ElementoPila> pila) {
         super(pila);
     }
 }//fin de la clase OperadorRelacional
 
-class OperadorOr extends ExpresionOperadoresBinarios
-{
-    public OperadorOr(Stack<ElementoPila> pila){
+class OperadorOr extends ExpresionOperadoresBinarios {
+    public OperadorOr(Stack<ElementoPila> pila) {
         super(pila);
     }
 }//fin de la clase OperadorOr
 
-class OperadorAnd extends ExpresionOperadoresBinarios
-{
-    public OperadorAnd(Stack<ElementoPila> pila){
+class OperadorAnd extends ExpresionOperadoresBinarios {
+    public OperadorAnd(Stack<ElementoPila> pila) {
         super(pila);
     }
 }//fin de la clase OperadorAnd
 
-class OperadorIgualdad extends ExpresionOperadoresBinarios
-{
-    public OperadorIgualdad(Stack<ElementoPila> pila){
+class OperadorIgualdad extends ExpresionOperadoresBinarios {
+    public OperadorIgualdad(Stack<ElementoPila> pila) {
         super(pila);
     }
 }//fin de la clase
 
-class OperadorNot extends Nodo
-{
-    public OperadorNot(Stack<ElementoPila> pila){
+class OperadorNot extends Nodo {
+    public OperadorNot(Stack<ElementoPila> pila) {
+        super();
         simbolo = "<Expresion>";
 
         pila.pop();
@@ -258,10 +253,11 @@ class OperadorNot extends Nodo
     }//fin del constructor
 }//fin de la clase OperadorAdicionDos
 
-class Variables extends Nodo
-{
+class Variables extends Nodo {
+    //constructor
+    public Variables(Stack<ElementoPila> pila) {
 
-    public Variables(Stack<ElementoPila> pila){
+        super();
         simbolo = "<ListaVar>";
 
         pila.pop();
@@ -277,16 +273,18 @@ class Variables extends Nodo
         variable.hijos.add(new Nodo(tipo));
         variable.hijos.add(new Nodo(identificador));
 
-        for(int i = 0; i < listaVariables.size(); i++){
+        for (int i = 0; i < listaVariables.size(); i++) {
             hijos.add(listaVariables.get(i));
         }//fin de for
-    }
+    }//fin del constructor
 
 }//fin de la clase Variables
 
-class VariablesDos extends Nodo
-{
-    public VariablesDos(Stack<ElementoPila> pila){
+class VariablesDos extends Nodo {
+    //constructor
+    public VariablesDos(Stack<ElementoPila> pila) {
+
+        super();
         simbolo = "<ListaVar>";
 
         pila.pop();
@@ -301,16 +299,18 @@ class VariablesDos extends Nodo
 
         hijos.add(variable);
 
-        for(int i = listaVariables.size() - 1; i >= 0; i--){
+        for (int i = listaVariables.size() - 1; i >= 0; i--) {
             hijos.add(listaVariables.get(i));
         }//fin de for
-    }
+    }//fin del constructor
 }//fin de la clase VariablesDos
 
 
-class DefFunc extends Nodo
-{
-    public DefFunc(Stack<ElementoPila> pila){
+class DefFunc extends Nodo {
+    //constructor
+    public DefFunc(Stack<ElementoPila> pila) {
+
+        super();
         simbolo = "<DefFunc>";
 
         pila.pop();
@@ -333,12 +333,14 @@ class DefFunc extends Nodo
         hijos.add(new Nodo(")"));
         hijos.add(bloqueFuncion);
 
-    }
+    }//fin del constructor
 }//fin de la clase DefFunc
 
-class Parametros extends Nodo
-{
-    public Parametros(Stack<ElementoPila> pila){
+class Parametros extends Nodo {
+    //constructor
+    public Parametros(Stack<ElementoPila> pila) {
+        super();
+
         simbolo = "<ListaParam>";
 
         pila.pop();
@@ -353,12 +355,14 @@ class Parametros extends Nodo
         parametro.hijos.add(new Nodo(identificador));
 
         hijos.add(parametro);
-    }
-}
+    }//fin del constructor
+}//fin de la clase Parametros
 
-class ParametrosDos extends Nodo
-{
-    public ParametrosDos(Stack<ElementoPila> pila){
+class ParametrosDos extends Nodo {
+    //constructor
+    public ParametrosDos(Stack<ElementoPila> pila) {
+
+        super();
 
         pila.pop();
         List<Nodo> listaVariables = pila.pop().getNodo().hijos;
@@ -375,15 +379,17 @@ class ParametrosDos extends Nodo
 
         hijos.add(parametro);
 
-        for(int i = listaVariables.size() - 1; i >= 0; i--){
+        for (int i = listaVariables.size() - 1; i >= 0; i--) {
             hijos.add(listaVariables.get(i));
-        }
-    }
+        }//fin de for
+    }//fin del constructor
 }//fin de la clase ParametrosDos
 
-class BloqueFuncion extends Nodo
-{
-    public BloqueFuncion(Stack<ElementoPila> pila){
+class BloqueFuncion extends Nodo {
+    //constructor
+    public BloqueFuncion(Stack<ElementoPila> pila) {
+
+        super();
         simbolo = "<BloqueFunc>";
 
         pila.pop();
@@ -399,10 +405,11 @@ class BloqueFuncion extends Nodo
     }//fin del constructor
 }//fin de la clase BloqueFuncion
 
-class LlamadaFuncion extends Nodo
-{
-    public LlamadaFuncion(Stack<ElementoPila> pila)
-    {
+class LlamadaFuncion extends Nodo {
+    //constructor
+    public LlamadaFuncion(Stack<ElementoPila> pila) {
+        super();
+
         simbolo = "<LlamadaFunc>";
 
         pila.pop();
@@ -414,17 +421,23 @@ class LlamadaFuncion extends Nodo
         pila.pop();
         String identificador = pila.pop().getElemento();
 
+        System.out.println("<LlamadaFuncion>");
+        System.out.println("\t<Identificador> " + identificador);
+        System.out.println("\t"+argumentos.hijos.get(0).hijos.get(0).simbolo);
+
+
         hijos.add(new Nodo(identificador));
         hijos.add(new Nodo("("));
         hijos.add(argumentos);
         hijos.add(new Nodo(")"));
-    }
+    }//fin del constructor
 }//fin de la clase LlamadaFuncion
 
-class ListaArgumentos extends Nodo
-{
-    public ListaArgumentos(Stack<ElementoPila> pila)
-    {
+class ListaArgumentos extends Nodo {
+    //constructor
+    public ListaArgumentos(Stack<ElementoPila> pila) {
+        super();
+
         simbolo = "<ListaArgumentos>";
 
         pila.pop();
@@ -433,56 +446,54 @@ class ListaArgumentos extends Nodo
         Nodo expresion = pila.pop().getNodo();
 
         hijos.add(expresion);
-        for(Nodo nodo : listaArgumentos.hijos){
+        for (Nodo nodo : listaArgumentos.hijos) {
             hijos.add(nodo);
-        }
-    }
-}
+            System.out.println(nodo.simbolo);
+        }//fin de for
+        //System.out.println("Hijos: " + hijos.get(0).simbolo);
+    }//fin del constructor
+}//fin de la clase ListaArgumentos
 
-class ListaArgumentosDos extends Nodo
-{
-    public ListaArgumentosDos(Stack<ElementoPila> pila)
-    {
+class ListaArgumentosDos extends Nodo {
+    //constructor
+    public ListaArgumentosDos(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<ListaArgumentos>";
 
         pila.pop();
-        Nodo listaArgumentos =  pila.pop().getNodo();
+        Nodo listaArgumentos = pila.pop().getNodo();
         pila.pop();
         Nodo expresion = pila.pop().getNodo();
 
         hijos.add(expresion);
-        for(Nodo nodo : listaArgumentos.hijos){
+        for (Nodo nodo : listaArgumentos.hijos) {
             hijos.add(nodo);
-        }
-    }
+        }//fin de for
+    }//fin del constructor
 }//fin de la clase ListaArgumentos
 
-class Sentencias extends Nodo
-{
-    public Sentencias(Stack<ElementoPila> pila)
-    {
+class Sentencias extends Nodo {
+    public Sentencias(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Sentencias>";
 
         pila.pop();
-        Nodo sentencias =  pila.pop().getNodo();
+        Nodo sentencias = pila.pop().getNodo();
         pila.pop();
         Nodo sentencia = pila.pop().getNodo();
 
         hijos.add(sentencia);
-        for(Nodo nodo : sentencias.hijos){
+        for (Nodo nodo : sentencias.hijos) {
             hijos.add(nodo);
-        }
-    }
-}
+        }//fin de for
+    }//fin del constructor
+}//fin de la clase Sentencias
 
-class SentenciasAsignacion extends Nodo
-{
-    public SentenciasAsignacion(Stack<ElementoPila> pila)
-    {
+class SentenciasAsignacion extends Nodo {
+    //constructor
+    public SentenciasAsignacion(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Sentencia>";
@@ -499,13 +510,12 @@ class SentenciasAsignacion extends Nodo
         hijos.add(new Nodo(identificador));
         hijos.add(new Nodo("="));
         hijos.add(expresion);
-    }
-}
+    }//fin del constructor
+}//fin de la clase SentenciasAsignacion
 
-class SentenciaLlamadaFuncion extends Nodo
-{
-    public SentenciaLlamadaFuncion(Stack<ElementoPila> pila)
-    {
+class SentenciaLlamadaFuncion extends Nodo {
+    //constructor
+    public SentenciaLlamadaFuncion(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Sentencia>";
@@ -514,13 +524,11 @@ class SentenciaLlamadaFuncion extends Nodo
         pila.pop();
         pila.pop();
         hijos.add(pila.pop().getNodo());
-    }
-}//fin de la clase
+    }//fin del constructor
+}//fin de la clase SentenciaLlamadaFuncion
 
-class SentenciaValorRegresa extends Nodo
-{
-    public SentenciaValorRegresa(Stack<ElementoPila> pila)
-    {
+class SentenciaValorRegresa extends Nodo {
+    public SentenciaValorRegresa(Stack<ElementoPila> pila) {
         super();
 
         pila.pop();
@@ -533,13 +541,12 @@ class SentenciaValorRegresa extends Nodo
         hijos.add(new Nodo("return"));
         hijos.add(valorRegresa);
 
-    }
-}
+    }//fin del constructor
+}//fin de la clase SentenciaValorRegresa
 
-class ExpresionEntreParentesis extends Nodo
-{
-    public ExpresionEntreParentesis(Stack<ElementoPila> pila)
-    {
+class ExpresionEntreParentesis extends Nodo {
+    //constructor
+    public ExpresionEntreParentesis(Stack<ElementoPila> pila) {
         super();
 
         pila.pop();
@@ -552,13 +559,12 @@ class ExpresionEntreParentesis extends Nodo
         hijos.add(new Nodo("("));
         hijos.add(expresion);
         hijos.add(new Nodo(")"));
-    }
+    }//fin del constructor
 }//fin de la clase ExpresionEntreParentesis
 
-class SentenciaIf extends Nodo
-{
-    public SentenciaIf(Stack<ElementoPila> pila)
-    {
+class SentenciaIf extends Nodo {
+    //constructor
+    public SentenciaIf(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Sentencia>";
@@ -582,13 +588,12 @@ class SentenciaIf extends Nodo
         hijos.add(new Nodo(")"));
         hijos.add(bloque);
         hijos.add(otros);
-    }
-}
+    }//fin del constructor
+}//fin de la clase SentenciaIf
 
-class SentenciaWhile extends Nodo
-{
-    public SentenciaWhile(Stack<ElementoPila> pila)
-    {
+class SentenciaWhile extends Nodo {
+    //constructor
+    public SentenciaWhile(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Sentencia>";
@@ -609,13 +614,12 @@ class SentenciaWhile extends Nodo
         hijos.add(expresion);
         hijos.add(new Nodo(")"));
         hijos.add(bloque);
-    }
+    }//fin del constructor
 }//fin de la clase SentenciaWhile
 
-class Bloque extends Nodo
-{
-    public Bloque(Stack<ElementoPila> pila)
-    {
+class Bloque extends Nodo {
+    //constructor
+    public Bloque(Stack<ElementoPila> pila) {
         super();
 
         pila.pop();
@@ -628,13 +632,12 @@ class Bloque extends Nodo
         hijos.add(new Nodo("{"));
         hijos.add(sentencias);
         hijos.add(new Nodo("}"));
-    }
+    }//fin del constructor
 }//fin de la clase Bloque
 
-class Otro extends Nodo
-{
-    public Otro(Stack<ElementoPila> pila)
-    {
+class Otro extends Nodo {
+    //constructor
+    public Otro(Stack<ElementoPila> pila) {
         super();
 
         simbolo = "<Otro>";
@@ -647,5 +650,5 @@ class Otro extends Nodo
         hijos.add(new Nodo("else"));
         hijos.add(bloque);
 
-    }
-}
+    }//fin del constructor
+}//fin de la clase Otro
