@@ -1,5 +1,8 @@
 package sintactico;
 
+import principal.Ventana;
+
+import javax.swing.table.DefaultTableModel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -54,26 +57,7 @@ public class Arbol
     }
 }//fin de la clase Arbol
 
-class Nodo
-{
-    //atributos
-    Nodo nodoSiguiente;
-    public String simbolo;
 
-    public List<Nodo> hijos = new LinkedList<>();
-
-    //constructor sin parametros
-    public Nodo() {
-
-    }//fin del constructor sin parametros
-
-    //constructor parametrizado
-    public Nodo(String simbolo) {
-        this.simbolo = simbolo;
-    }//fin del constrcutor parametrizado
-
-
-}//fin de la clase Nodo
 
 class Programa extends Nodo {
     public Programa(Stack<ElementoPila> pila) {
@@ -91,8 +75,15 @@ class Identificador extends Nodo {
         pila.pop();
         simbolo = ((Terminal) pila.pop()).getElemento();
         simbolo = "<Identificador> " + simbolo;
+
+        //muestra();
     }//fin del constructor
 
+    @Override
+    public void muestra() {
+        sangria();
+        System.out.println("<Chuchita> " + simbolo);
+    }
 }//fin de la clase Identificador
 
 class Entero extends Nodo {
@@ -167,22 +158,61 @@ class DefinicionesLocales extends Nodo {
 }//fin de la clase DefinicionesLocales
 
 class ExpresionOperadoresBinarios extends Nodo {
+
+    Nodo expresionDerecha;
+    String operador;
+    Nodo expresionIzquierda;
+
+
     public ExpresionOperadoresBinarios(Stack<ElementoPila> pila) {
         super();
         simbolo = "<Expresion>";
 
         pila.pop();
-        Nodo expresionDerecha = pila.pop().getNodo();
+        expresionDerecha = pila.pop().getNodo();
         pila.pop();
-        String operador = pila.pop().getElemento();
+        operador = pila.pop().getElemento();
         pila.pop();
-        Nodo expresionIzquierda = pila.pop().getNodo();
+        expresionIzquierda = pila.pop().getNodo();
 
         Nodo expresion = new Nodo(operador);
         expresion.hijos.add(expresionIzquierda);
         expresion.hijos.add(expresionDerecha);
 
         hijos.add(expresion);
+
+        muestra();
+
+
+
+    }
+
+    @Override
+    public void muestra() {
+        //super.muestra();
+
+        sangria();
+
+        System.out.println("<Expresion>");
+        if(expresionDerecha != null)
+        {
+            System.out.println("Entro");
+            expresionDerecha.tamSangria += 1;
+            expresionDerecha.muestra();
+        }
+
+        sangria();
+
+        System.out.println("<OpSuma> " + simbolo);
+        sangria();
+
+        if(expresionIzquierda != null)
+        {
+            expresionIzquierda.tamSangria += 1;
+            expresionIzquierda.muestra();
+        }
+
+
     }
 }//fin de la clase ExpresionOperadoresBinarios
 
@@ -190,6 +220,8 @@ class OperadorAdicion extends ExpresionOperadoresBinarios {
     public OperadorAdicion(Stack<ElementoPila> pila) {
         super(pila);
     }
+
+
 }//fin de la clase OperadorAdicion
 
 class OperadorAdicionDos extends Nodo {
@@ -215,9 +247,14 @@ class OperadorMultiplicacion extends ExpresionOperadoresBinarios {
 }//fin de la clase OperadorMultiplicacion
 
 class OperadorRelacional extends ExpresionOperadoresBinarios {
+
     public OperadorRelacional(Stack<ElementoPila> pila) {
         super(pila);
+
+
     }
+
+
 }//fin de la clase OperadorRelacional
 
 class OperadorOr extends ExpresionOperadoresBinarios {
@@ -273,9 +310,28 @@ class Variables extends Nodo {
         variable.hijos.add(new Nodo(tipo));
         variable.hijos.add(new Nodo(identificador));
 
+
+
+        Ventana.txtArbol.append(variable.simbolo + "\n");
+        Ventana.txtArbol.append("\t<Tipo> " + tipo + "\n");
+        Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
+
+        TablaSimbolos.agregarElemento(tipo, identificador);
+
+
+
+        System.out.println(variable.simbolo);
+        System.out.println("\t<Tipo> " + tipo);
+        System.out.println("\t<Identificador> " + identificador);
+
         for (int i = 0; i < listaVariables.size(); i++) {
             hijos.add(listaVariables.get(i));
+            Ventana.txtArbol.append("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo + "\n");
+            System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
+            TablaSimbolos.agregarElemento(tipo, listaVariables.get(i).hijos.get(i).simbolo);
         }//fin de for
+
+
     }//fin del constructor
 
 }//fin de la clase Variables
@@ -332,6 +388,15 @@ class DefFunc extends Nodo {
         hijos.add(parametros);
         hijos.add(new Nodo(")"));
         hijos.add(bloqueFuncion);
+
+        Ventana.txtArbol.append(simbolo + "\n");
+        Ventana.txtArbol.append("\t<Tipo> " + tipo + "\n");
+        Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
+
+        System.out.println(simbolo);
+        System.out.println("\t<Tipo> " + tipo);
+        System.out.println("\t<Identificador> " + identificador);
+        System.out.println();
 
     }//fin del constructor
 }//fin de la clase DefFunc
@@ -421,9 +486,14 @@ class LlamadaFuncion extends Nodo {
         pila.pop();
         String identificador = pila.pop().getElemento();
 
+        Ventana.txtArbol.append("<LlamadaFuncion>\n");
+        Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
+        Ventana.txtArbol.append("\t"+argumentos.hijos.get(0).hijos.get(0).simbolo + "\n");
+
         System.out.println("<LlamadaFuncion>");
         System.out.println("\t<Identificador> " + identificador);
         System.out.println("\t"+argumentos.hijos.get(0).hijos.get(0).simbolo);
+
 
 
         hijos.add(new Nodo(identificador));
@@ -510,6 +580,14 @@ class SentenciasAsignacion extends Nodo {
         hijos.add(new Nodo(identificador));
         hijos.add(new Nodo("="));
         hijos.add(expresion);
+
+        Ventana.txtArbol.append("<Asignacion>\n");
+        Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
+        Ventana.txtArbol.append("\t" + expresion.hijos.get(0).simbolo + "\n");
+
+        System.out.println("<Asignacion>");
+        System.out.println("\t<Identificador> " + identificador);
+        System.out.println("\t" + expresion.hijos.get(0).simbolo);
     }//fin del constructor
 }//fin de la clase SentenciasAsignacion
 
@@ -588,6 +666,23 @@ class SentenciaIf extends Nodo {
         hijos.add(new Nodo(")"));
         hijos.add(bloque);
         hijos.add(otros);
+
+        System.out.println("<if>");
+        Ventana.txtArbol.append("<if>\n");
+        for(int i = 0; i < hijos.size(); i++){
+            //System.out.println("\t" + hijos.get(i).simbolo);
+            if(i == 2)
+            {
+                System.out.println("\t" + hijos.get(2).hijos.get(0).simbolo);
+                Ventana.txtArbol.append("\t" + hijos.get(2).hijos.get(0).simbolo + "\n");
+            }
+            /*if(i == 5)
+            {
+                System.out.println("\t" + hijos.get(5).hijos.get(0).simbolo);
+                System.out.println("\t" + hijos.get(5).hijos.get(1).hijos.size());
+
+            }*/
+        }
     }//fin del constructor
 }//fin de la clase SentenciaIf
 
@@ -614,6 +709,19 @@ class SentenciaWhile extends Nodo {
         hijos.add(expresion);
         hijos.add(new Nodo(")"));
         hijos.add(bloque);
+
+        Ventana.txtArbol.append("<while>\n");
+
+
+        System.out.println("<while>");
+        for(int i = 0; i < hijos.size(); i++) {
+            //System.out.println("\t" + hijos.get(i).simbolo);
+            if (i == 2) {
+                Ventana.txtArbol.append("\t" + hijos.get(2).hijos.get(0).simbolo + "\n");
+                System.out.println("\t" + hijos.get(2).hijos.get(0).simbolo);
+            }
+
+        }
     }//fin del constructor
 }//fin de la clase SentenciaWhile
 
@@ -652,3 +760,19 @@ class Otro extends Nodo {
 
     }//fin del constructor
 }//fin de la clase Otro
+
+class TablaSimbolos
+{
+    public static void agregarElemento(String tipo, String identificador)
+    {
+        DefaultTableModel modeloTabla = (DefaultTableModel) Ventana.tablaSimbolos.getModel();
+        Object[] fila = new Object[3];
+
+        fila[0] = tipo;
+        fila[1] = identificador;
+        fila[2] = "Global";
+
+        modeloTabla.addRow(fila);
+        Ventana.tablaSimbolos.setModel(modeloTabla);
+    }
+}

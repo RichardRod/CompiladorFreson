@@ -3,56 +3,104 @@ package principal;
 import sintactico.Sintactico;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Ventana extends JFrame implements ActionListener {
+public class Ventana extends JFrame implements ActionListener, KeyListener {
 
     //atributos
+    private Font fuente;
     private JPanel panelContenedor;
-    private JTextArea txtFuente;
-    private JButton botonAnalizar;
+
+    private JMenuBar barraMenu;
+    private JButton botonCompilar;
     private JButton botonAbrir;
+
+    private JTextArea txtLineas;
+    private JTextArea txtFuente;
+    public static JTextArea txtArbol;
     private JTable tablaResultados;
+    public static JTable tablaSimbolos;
     private JScrollPane desplazamientoTabla;
     private JScrollPane desplazamientoTexto;
+    private JScrollPane desplazamientoArbol;
+    private JScrollPane desplazamientoSimbolos;
 
     public Ventana() {
         super("Analizador Lexico");
 
+        fuente = new Font("Comic Sans Ms", Font.CENTER_BASELINE, 16);
+
         panelContenedor = new JPanel();
         setLayout(null);
 
+        barraMenu = new JMenuBar();
+
+        botonAbrir = new JButton();
+        botonAbrir.setPreferredSize(new Dimension(30, 40));
+        botonAbrir.setIcon(new ImageIcon("imagenes/openIcon.png"));
+        botonAbrir.addActionListener(this);
+        barraMenu.add(botonAbrir);
+
+        botonCompilar = new JButton();
+        botonCompilar.setPreferredSize(new Dimension(30, 40));
+        botonCompilar.setIcon(new ImageIcon("imagenes/buildIcon.png"));
+        botonCompilar.addActionListener(this);
+        barraMenu.add(botonCompilar);
+
+        setJMenuBar(barraMenu);
+
+
         txtFuente = new JTextArea();
-        txtFuente.setBounds(50, 50, 500, 500);
-        add(txtFuente);
+        txtFuente.setFont(fuente);
+        txtFuente.setBounds(10, 10, 1260, 500);
+        txtFuente.addKeyListener(this);
+        panelContenedor.add(txtFuente);
 
         desplazamientoTexto = new JScrollPane(txtFuente);
-        desplazamientoTexto.setBounds(50, 50, 500, 500);
+        desplazamientoTexto.setBounds(10, 10, 1260, 500);
         add(desplazamientoTexto);
 
-        botonAnalizar = new JButton("Analizar");
-        botonAnalizar.setBounds(100, 600, 80, 30);
-        botonAnalizar.addActionListener(this);
-        add(botonAnalizar);
+        txtArbol = new JTextArea();
+        txtArbol.setBounds(530, 280, 740, 250);
+        add(txtArbol);
 
-        botonAbrir = new JButton("Abrir");
-        botonAbrir.setBounds(200, 600, 80, 30);
-        botonAbrir.addActionListener(this);
-        add(botonAbrir);
+        desplazamientoArbol = new JScrollPane(txtArbol);
+        desplazamientoArbol.setBounds(530, 280, 740, 250);
+        add(desplazamientoArbol);
 
         tablaResultados = new JTable(new DefaultTableModel(new Object[][]{},
                 new String[]{
                         "Elementos en pila", "Entrada", "Accion",}));
-        tablaResultados.setBounds(600, 50, 650, 500);
+        tablaResultados.setBounds(530, 10, 740, 250);
         tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(350);
         add(tablaResultados);
 
+        tablaSimbolos = new JTable(new DefaultTableModel(new Object[][]{},
+                new String[]{
+                        "Tipo", "Identificador", "Ambito",}));
+        tablaSimbolos.setBounds(10, 280, 500, 250);
+        tablaSimbolos.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tablaSimbolos.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tablaSimbolos.getColumnModel().getColumn(2).setPreferredWidth(50);
+        add(tablaSimbolos);
+
+        desplazamientoSimbolos = new JScrollPane(tablaSimbolos);
+        desplazamientoSimbolos.setBounds(10, 280, 500, 250);
+        add(desplazamientoSimbolos);
+
+
+
         desplazamientoTabla = new JScrollPane(tablaResultados);
-        desplazamientoTabla.setBounds(600, 50, 650, 500);
+        desplazamientoTabla.setBounds(530, 10, 740, 250);
         add(desplazamientoTabla);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +112,7 @@ public class Ventana extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == botonAnalizar) {
+        if (e.getSource() == botonCompilar) {
             limpiar();
             analizar();
         }
@@ -137,4 +185,20 @@ public class Ventana extends JFrame implements ActionListener {
         sintactico.analisisSintactico();
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("Uno");
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        String textoFuente = txtFuente.getText();
+
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("tres");
+    }
 }//fin de la clase Ventana

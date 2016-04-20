@@ -2,6 +2,7 @@ package sintactico;
 
 import lexico.Lexico;
 import lexico.TipoSimbolo;
+import principal.Ventana;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -107,6 +108,12 @@ public class Sintactico {
                     fila = pila.peek().getId();
                     columna = lexico.getTipo();
                     accion = tabla[fila][columna];
+
+                    System.out.println("Aceptacion");
+
+                    pila.pop();
+                    pila.peek().getNodo().muestra();
+
                     break;
                 }//fin de if
 
@@ -315,6 +322,15 @@ public class Sintactico {
 
                     case 48:
                         nodo = new OperadorRelacional(pila);
+                        Ventana.txtArbol.append("<Relacional> ");
+                        Ventana.txtArbol.append(nodo.hijos.get(0).simbolo + "\n");
+                        Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(0).hijos.get(0).simbolo + "\n");
+                        Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(1).hijos.get(0).simbolo + "\n");
+                        System.out.print("<Relacional> ");
+                        System.out.println(nodo.hijos.get(0).simbolo);
+
+                        System.out.println("\t" + nodo.hijos.get(0).hijos.get(0).hijos.get(0).simbolo);
+                        System.out.println("\t" + nodo.hijos.get(0).hijos.get(1).hijos.get(0).simbolo);
                         break;
 
                     case 49:
