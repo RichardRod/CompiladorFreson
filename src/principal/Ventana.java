@@ -24,7 +24,6 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
     private JButton botonCompilar;
     private JButton botonAbrir;
 
-    private JTextArea txtLineas;
     private JTextArea txtFuente;
     public static JTextArea txtArbol;
     private JTable tablaResultados;
@@ -34,8 +33,12 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
     private JScrollPane desplazamientoArbol;
     private JScrollPane desplazamientoSimbolos;
 
+    private JTabbedPane panelFichas;
+    private JPanel panelPila;
+    private JPanel panelArbol;
+
     public Ventana() {
-        super("Analizador Lexico");
+        super("Compilador");
 
         fuente = new Font("Comic Sans Ms", Font.CENTER_BASELINE, 16);
 
@@ -61,47 +64,38 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
 
         txtFuente = new JTextArea();
         txtFuente.setFont(fuente);
-        txtFuente.setBounds(10, 10, 1260, 500);
+        txtFuente.setBounds(10, 10, 1260, 400);
         txtFuente.addKeyListener(this);
         panelContenedor.add(txtFuente);
 
         desplazamientoTexto = new JScrollPane(txtFuente);
-        desplazamientoTexto.setBounds(10, 10, 1260, 500);
+        desplazamientoTexto.setBounds(10, 10, 1260, 400);
         add(desplazamientoTexto);
 
-        txtArbol = new JTextArea();
-        txtArbol.setBounds(530, 280, 740, 250);
-        add(txtArbol);
+        panelFichas = new JTabbedPane();
 
-        desplazamientoArbol = new JScrollPane(txtArbol);
-        desplazamientoArbol.setBounds(530, 280, 740, 250);
-        add(desplazamientoArbol);
 
+        panelPila = new JPanel();
+        panelPila.setLayout(new BorderLayout());
         tablaResultados = new JTable(new DefaultTableModel(new Object[][]{},
                 new String[]{
                         "Elementos en pila", "Entrada", "Accion",}));
-        tablaResultados.setBounds(530, 10, 740, 250);
-        tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(350);
-        add(tablaResultados);
-
-        tablaSimbolos = new JTable(new DefaultTableModel(new Object[][]{},
-                new String[]{
-                        "Tipo", "Identificador", "Ambito",}));
-        tablaSimbolos.setBounds(10, 280, 500, 250);
-        tablaSimbolos.getColumnModel().getColumn(0).setPreferredWidth(50);
-        tablaSimbolos.getColumnModel().getColumn(1).setPreferredWidth(100);
-        tablaSimbolos.getColumnModel().getColumn(2).setPreferredWidth(50);
-        add(tablaSimbolos);
-
-        desplazamientoSimbolos = new JScrollPane(tablaSimbolos);
-        desplazamientoSimbolos.setBounds(10, 280, 500, 250);
-        add(desplazamientoSimbolos);
-
-
-
+        tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(700);
+        panelPila.add(BorderLayout.CENTER, tablaResultados);
         desplazamientoTabla = new JScrollPane(tablaResultados);
-        desplazamientoTabla.setBounds(530, 10, 740, 250);
-        add(desplazamientoTabla);
+        panelPila.add(BorderLayout.CENTER, desplazamientoTabla);
+        panelFichas.addTab("Pila", panelPila);
+
+        panelArbol = new JPanel();
+        panelArbol.setLayout(new BorderLayout());
+        txtArbol = new JTextArea();
+        panelArbol.add(BorderLayout.CENTER, txtArbol);
+        desplazamientoArbol = new JScrollPane(txtArbol);
+        panelArbol.add(BorderLayout.CENTER, desplazamientoArbol);
+        panelFichas.addTab("Arbol", panelArbol);
+
+        panelFichas.setBounds(0, 420, 1280, 250);
+        add(panelFichas);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);

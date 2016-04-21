@@ -1,14 +1,18 @@
 package sintactico;
 
+import semantico.TablaSimbolos;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Nodo
 {
     //atributos
-    Nodo nodoSiguiente;
     public String simbolo;
     int tamSangria;
+    private char tipoDato;
+    public static TablaSimbolos tablaSimbolos;
+    public static String ambito;
 
     public List<Nodo> hijos = new LinkedList<>();
 
@@ -31,7 +35,14 @@ public class Nodo
 
     public void muestra()
     {
-        System.out.println("Metodo muestra");
+        //System.out.println(simbolo);
+        //System.out.println("Metodo muestra");
+    }
+
+    public void validaTipos()
+    {
+        tipoDato = 'v';
+
     }
 
 

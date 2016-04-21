@@ -9,52 +9,7 @@ import java.util.Stack;
 
 public class Arbol
 {
-    private Nodo raiz;
 
-    public void insertar(Nodo elementoNuevo)
-    {
-        //System.out.println("INSERCION");
-        List<Nodo> aux = new LinkedList<>();
-        List<Nodo> hijos1 = new LinkedList<>();
-        List<Nodo> hijos2 = new LinkedList<>();
-        System.out.println(elementoNuevo.simbolo);
-
-        for(int i = 0; i < elementoNuevo.hijos.size(); i++){
-            System.out.println(elementoNuevo.hijos.get(i).simbolo);
-            aux = elementoNuevo.hijos.get(i).hijos;
-
-            if(elementoNuevo.hijos.get(i).hijos.size() > 0)
-            {
-                hijos1 = aux;
-            }
-        }
-
-        System.out.println("Hijos: " + aux.size());
-
-        for(int i = 0; i < aux.size(); i++){
-            System.out.println(aux.get(i).simbolo);
-        }
-
-        System.out.println("------------");
-
-
-        elementoNuevo.nodoSiguiente = raiz;
-        raiz = elementoNuevo;
-    }
-
-    public void imprimir(Nodo recorrido)
-    {
-        if(recorrido != null)
-        {
-            imprimir(recorrido.nodoSiguiente);
-            System.out.println(recorrido.simbolo + " - ");
-        }
-    }
-
-    public void imprimir()
-    {
-        imprimir(raiz);
-    }
 }//fin de la clase Arbol
 
 
@@ -316,7 +271,6 @@ class Variables extends Nodo {
         Ventana.txtArbol.append("\t<Tipo> " + tipo + "\n");
         Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
 
-        TablaSimbolos.agregarElemento(tipo, identificador);
 
 
 
@@ -328,7 +282,7 @@ class Variables extends Nodo {
             hijos.add(listaVariables.get(i));
             Ventana.txtArbol.append("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo + "\n");
             System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
-            TablaSimbolos.agregarElemento(tipo, listaVariables.get(i).hijos.get(i).simbolo);
+
         }//fin de for
 
 
@@ -761,18 +715,3 @@ class Otro extends Nodo {
     }//fin del constructor
 }//fin de la clase Otro
 
-class TablaSimbolos
-{
-    public static void agregarElemento(String tipo, String identificador)
-    {
-        DefaultTableModel modeloTabla = (DefaultTableModel) Ventana.tablaSimbolos.getModel();
-        Object[] fila = new Object[3];
-
-        fila[0] = tipo;
-        fila[1] = identificador;
-        fila[2] = "Global";
-
-        modeloTabla.addRow(fila);
-        Ventana.tablaSimbolos.setModel(modeloTabla);
-    }
-}

@@ -377,7 +377,7 @@ public class Sintactico {
 
         }//fin de while
 
-        arbol.imprimir();
+
 
     }//fin del metodo analisisSintactico
 
