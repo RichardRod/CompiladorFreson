@@ -8,17 +8,18 @@ import java.util.List;
 public class Nodo
 {
     //atributos
-    public String simbolo;
-    int tamSangria;
+    protected String simbolo;
+    public static int tamSangria;
+    Nodo nodoSiguiente;
     private char tipoDato;
-    public static TablaSimbolos tablaSimbolos;
-    public static String ambito;
+    //public static TablaSimbolos tablaSimbolos;
+    //public static String ambito;
 
     public List<Nodo> hijos = new LinkedList<>();
 
     //constructor sin parametros
     public Nodo() {
-
+        nodoSiguiente = null;
     }//fin del constructor sin parametros
 
     //constructor parametrizado
@@ -35,8 +36,7 @@ public class Nodo
 
     public void muestra()
     {
-        //System.out.println(simbolo);
-        //System.out.println("Metodo muestra");
+        System.out.println(simbolo);
     }
 
     public void validaTipos()

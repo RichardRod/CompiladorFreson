@@ -22,7 +22,7 @@ public class Sintactico {
     private Stack<ElementoPila> pila;
     private NoTerminal nt;
     private Nodo nodo;
-    private Arbol arbol = new Arbol();
+    private Nodo arbolSintactico;
 
 
 
@@ -112,8 +112,20 @@ public class Sintactico {
                     System.out.println("Aceptacion");
 
                     pila.pop();
-                    pila.peek().getNodo().muestra();
+                    //pila.peek().getNodo().muestra();
+                    arbolSintactico = pila.pop().getNodo();
 
+                    if(arbolSintactico != null)
+                    {
+                        System.out.println("Arbol");
+                        System.out.println("\n");
+                        arbolSintactico.muestra();
+                        System.out.println("\n\n\n");
+                    }
+                    else
+                    {
+                        System.out.println("Arbol Vacio");
+                    }
                     break;
                 }//fin de if
 
