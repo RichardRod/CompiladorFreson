@@ -55,10 +55,6 @@ public class Sintactico {
         pila.clear();
     }
 
-    public String getEntrada() {
-        return entrada;
-    }
-
     public void analisisSintactico() {
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaResultados.getModel();
         Object[] filas = new Object[3];
@@ -112,13 +108,14 @@ public class Sintactico {
                     System.out.println("Aceptacion");
 
                     pila.pop();
-                    //pila.peek().getNodo().muestra();
                     arbolSintactico = pila.pop().getNodo();
 
                     if(arbolSintactico != null)
                     {
                         System.out.println("Arbol");
                         System.out.println("\n");
+                        //System.out.println(arbolSintactico.simbolo);
+                        //arbolSintactico.muestra();
                         arbolSintactico.muestra();
                         System.out.println("\n\n\n");
                     }

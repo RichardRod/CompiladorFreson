@@ -1,8 +1,6 @@
 package semantico;
 
 
-import java.util.List;
-
 public class TablaSimbolos {
 
 

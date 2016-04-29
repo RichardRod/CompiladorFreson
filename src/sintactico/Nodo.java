@@ -1,7 +1,5 @@
 package sintactico;
 
-import semantico.TablaSimbolos;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class Nodo
 
     public void muestra()
     {
-        System.out.println(simbolo);
+
     }
 
     public void validaTipos()

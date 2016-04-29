@@ -2,25 +2,33 @@ package sintactico;
 
 import principal.Ventana;
 
-import javax.swing.table.DefaultTableModel;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-public class Arbol
-{
-
-}//fin de la clase Arbol
-
-
 
 class Programa extends Nodo {
+
+    Definiciones definiciones;
+
     public Programa(Stack<ElementoPila> pila) {
         super();
         simbolo = "<Programa>";
         pila.pop();
-        hijos.add(pila.pop().getNodo());
+        definiciones = (Definiciones) (pila.pop().getNodo());
+        hijos.add(definiciones);
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        System.out.println(simbolo);
+        tamSangria++;
+        sangria();
+        System.out.println(definiciones.simbolo);
+        if(definiciones != null)
+        {
+            definiciones.muestra();
+        }
+    }
 }//fin de la clase Programa
 
 class Identificador extends Nodo {
@@ -74,6 +82,11 @@ class Cadena extends Nodo {
 }//fin de la clase Cadena
 
 class Definiciones extends Nodo {
+
+
+    Nodo definiciones;
+    Nodo definicion;
+
     //constructor
     public Definiciones(Stack<ElementoPila> pila) {
 
@@ -82,15 +95,31 @@ class Definiciones extends Nodo {
         simbolo = "<Definiciones>";
 
         pila.pop();
-        Nodo definiciones = pila.pop().getNodo();
+        definiciones = (pila.pop().getNodo());
+
         pila.pop();
-        Nodo definicion = pila.pop().getNodo();
+        definicion = pila.pop().getNodo();
 
         hijos.add(definicion);
         for (int i = 0; i < definiciones.hijos.size(); i++) {
             hijos.add(definiciones.hijos.get(i));
         }//fin de for
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+
+        if(definiciones != null)
+        {
+            definiciones.muestra();
+        }
+
+
+
+        //System.out.println("Mis hijazos: " + definiciones.hijos.get(0).simbolo);
+        //System.out.println("Mis hijazos: " + definicion.hijos.get(0).simbolo);
+
+    }
 }//fin de la clase Definiciones
 
 class DefinicionesLocales extends Nodo {
@@ -206,7 +235,6 @@ class OperadorRelacional extends ExpresionOperadoresBinarios {
     public OperadorRelacional(Stack<ElementoPila> pila) {
         super(pila);
 
-
     }
 
 
@@ -317,6 +345,13 @@ class VariablesDos extends Nodo {
 
 
 class DefFunc extends Nodo {
+
+    private String tipo;
+    private String identificador;
+    private String llaveInicio;
+    private String llaveFin;
+    private Parametros parametros;
+
     //constructor
     public DefFunc(Stack<ElementoPila> pila) {
 
@@ -325,22 +360,25 @@ class DefFunc extends Nodo {
 
         pila.pop();
         Nodo bloqueFuncion = pila.pop().getNodo();
+
         pila.pop();
+        llaveFin =  pila.pop().getElemento();
+
         pila.pop();
+        parametros = (Parametros) pila.pop().getNodo();
+
         pila.pop();
-        Nodo parametros = pila.pop().getNodo();
+        llaveInicio = pila.pop().getElemento();
+
         pila.pop();
+        identificador = pila.pop().getElemento();
+
         pila.pop();
-        pila.pop();
-        String identificador = pila.pop().getElemento();
-        pila.pop();
-        String tipo = pila.pop().getElemento();
+        tipo = pila.pop().getElemento();
 
         hijos.add(new Nodo(tipo));
         hijos.add(new Nodo(identificador));
-        hijos.add(new Nodo("("));
         hijos.add(parametros);
-        hijos.add(new Nodo(")"));
         hijos.add(bloqueFuncion);
 
         Ventana.txtArbol.append(simbolo + "\n");
@@ -350,9 +388,36 @@ class DefFunc extends Nodo {
         System.out.println(simbolo);
         System.out.println("\t<Tipo> " + tipo);
         System.out.println("\t<Identificador> " + identificador);
+        System.out.println("Parametros: " + parametros.hijos.get(0).hijos.get(0).simbolo);
+        System.out.println("Parametros: " + parametros.hijos.get(0).hijos.get(1).simbolo);
         System.out.println();
 
+        this.muestra();
+
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        System.out.println(simbolo);
+        sangria();
+        System.out.println("<Tipo>" + tipo);
+        sangria();
+        System.out.println("<Identificador> " + identificador);
+        sangria();
+        System.out.println("<LlaveInicio> " + llaveInicio);
+        sangria();
+        System.out.println("<Parametros>");
+
+        if(parametros != null)
+        {
+            tamSangria++;
+            parametros.muestra();
+        }
+
+        sangria();
+        System.out.println("<LlaveFin> " + llaveFin);
+
+    }
 }//fin de la clase DefFunc
 
 class Parametros extends Nodo {
@@ -374,7 +439,15 @@ class Parametros extends Nodo {
         parametro.hijos.add(new Nodo(identificador));
 
         hijos.add(parametro);
+
+        System.out.println("LLamado listaParam");
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        System.out.println("Muestra en parametros");
+
+    }
 }//fin de la clase Parametros
 
 class ParametrosDos extends Nodo {
@@ -634,7 +707,6 @@ class SentenciaIf extends Nodo {
             {
                 System.out.println("\t" + hijos.get(5).hijos.get(0).simbolo);
                 System.out.println("\t" + hijos.get(5).hijos.get(1).hijos.size());
-
             }*/
         }
     }//fin del constructor
@@ -714,4 +786,3 @@ class Otro extends Nodo {
 
     }//fin del constructor
 }//fin de la clase Otro
-

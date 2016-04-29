@@ -181,7 +181,7 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("Uno");
+        //System.out.println("Uno");
     }
 
     @Override
@@ -193,6 +193,6 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        System.out.println("tres");
+        //System.out.println("tres");
     }
 }//fin de la clase Ventana
