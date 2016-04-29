@@ -14,7 +14,9 @@ class Programa extends Nodo {
         super();
         simbolo = "<Programa>";
         pila.pop();
-        definiciones = (Definiciones) (pila.pop().getNodo());
+        try {
+            definiciones = (Definiciones) (pila.pop().getNodo());
+        }catch (ClassCastException ex){}
         hijos.add(definiciones);
     }//fin del constructor
 
@@ -23,8 +25,9 @@ class Programa extends Nodo {
         System.out.println(simbolo);
         tamSangria++;
         sangria();
-        System.out.println(definiciones.simbolo);
+
         if (definiciones != null) {
+            System.out.println(definiciones.simbolo);
             definiciones.muestra();
         }
     }
@@ -82,7 +85,6 @@ class Cadena extends Nodo {
 
 class Definiciones extends Nodo {
 
-
     Nodo definiciones;
     Nodo definicion;
 
@@ -114,10 +116,6 @@ class Definiciones extends Nodo {
             definiciones.muestra();
         }
 
-
-        //System.out.println("Mis hijazos: " + definiciones.hijos.get(0).simbolo);
-        //System.out.println("Mis hijazos: " + definicion.hijos.get(0).simbolo);
-
     }
 }//fin de la clase Definiciones
 
@@ -129,14 +127,15 @@ class DefinicionesLocales extends Nodo {
     //constructor
     public DefinicionesLocales(Stack<ElementoPila> pila) {
         super();
-        System.out.println("Entro definiciones locales");
 
         simbolo = "<DefLocales>";
 
         pila.pop();
         definicionesLocales = pila.pop().getNodo();
         pila.pop();
-        definicionLocal = (Variables) pila.pop().getNodo();
+        try {
+            definicionLocal = (Variables) pila.pop().getNodo();
+        }catch (ClassCastException ex){}
 
         hijos.add(definicionLocal);
         for (int i = 0; i < definicionesLocales.hijos.size(); i++) {
@@ -149,16 +148,13 @@ class DefinicionesLocales extends Nodo {
 
     @Override
     public void muestra() {
-        System.out.println(simbolo);
 
         if(definicionLocal != null)
         {
+            System.out.println(simbolo);
+            definicionLocal.sangria();
             definicionLocal.muestra();
         }
-        /*for (Nodo variable : hijos) {
-            System.out.println(hijos.get(0).simbolo);
-        }*/
-        //System.out.println(hijos.size());
     }
 }//fin de la clase DefinicionesLocales
 
@@ -186,7 +182,7 @@ class ExpresionOperadoresBinarios extends Nodo {
 
         hijos.add(expresion);
 
-        muestra();
+        this.muestra();
 
 
     }
@@ -292,6 +288,8 @@ class OperadorNot extends Nodo {
 }//fin de la clase OperadorAdicionDos
 
 class Variables extends Nodo {
+    String tipo;
+    String identificador;
     List<Nodo> listaVariables;
 
     //constructor
@@ -305,9 +303,9 @@ class Variables extends Nodo {
         pila.pop();
         listaVariables = pila.pop().getNodo().hijos;
         pila.pop();
-        String identificador = pila.pop().getElemento();
+        identificador = pila.pop().getElemento();
         pila.pop();
-        String tipo = pila.pop().getElemento();
+        tipo = pila.pop().getElemento();
 
         Nodo variable = new Nodo("<DefVar>");
         variable.hijos.add(new Nodo(tipo));
@@ -319,14 +317,14 @@ class Variables extends Nodo {
         Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
 
 
-        System.out.println(variable.simbolo);
+       /* System.out.println(variable.simbolo);
         System.out.println("\t<Tipo> " + tipo);
-        System.out.println("\t<Identificador> " + identificador);
+        System.out.println("\t<Identificador> " + identificador);*/
 
         for (int i = 0; i < listaVariables.size(); i++) {
             hijos.add(listaVariables.get(i));
             Ventana.txtArbol.append("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo + "\n");
-            System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
+            //System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
 
         }//fin de for
 
@@ -336,14 +334,14 @@ class Variables extends Nodo {
     @Override
     public void muestra() {
 
-        System.out.println("Muestra variables");
-        int i = 0;
-        for(Nodo variable: listaVariables){
-            System.out.println(variable.simbolo);
-            i += 1;
+        System.out.println(simbolo);
+        System.out.println("\t<Tipo> " + tipo);
+        System.out.println("\t<Identificador> " + identificador);
+
+        for (int i = 0; i < listaVariables.size(); i++) {
+            System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
         }
 
-        System.out.println(i);
 
     }
 }//fin de la clase Variables
@@ -532,6 +530,11 @@ class BloqueFuncion extends Nodo {
 }//fin de la clase BloqueFuncion
 
 class LlamadaFuncion extends Nodo {
+
+    String identificador;
+    String parentesisInicio;
+    Nodo argumentos;
+    String parentesisFin;
     //constructor
     public LlamadaFuncion(Stack<ElementoPila> pila) {
         super();
@@ -539,13 +542,13 @@ class LlamadaFuncion extends Nodo {
         simbolo = "<LlamadaFunc>";
 
         pila.pop();
+        parentesisFin = pila.pop().getElemento();
         pila.pop();
+        argumentos = pila.pop().getNodo();
         pila.pop();
-        Nodo argumentos = pila.pop().getNodo();
+        parentesisInicio =  pila.pop().getElemento();
         pila.pop();
-        pila.pop();
-        pila.pop();
-        String identificador = pila.pop().getElemento();
+        identificador = pila.pop().getElemento();
 
         Ventana.txtArbol.append("<LlamadaFuncion>\n");
         Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
@@ -561,6 +564,21 @@ class LlamadaFuncion extends Nodo {
         hijos.add(argumentos);
         hijos.add(new Nodo(")"));
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        System.out.println("<LLamadaFuncion>");
+        sangria();
+        System.out.println("<Identificador> " + identificador);
+        sangria();
+        System.out.println("<Argumentos>");
+        sangria();
+        System.out.println("<ParentesisInicio> " + parentesisInicio);
+
+
+        sangria();
+        System.out.println("<ParentesisFin> " + parentesisFin);
+    }
 }//fin de la clase LlamadaFuncion
 
 class ListaArgumentos extends Nodo {
@@ -652,6 +670,7 @@ class SentenciasAsignacion extends Nodo {
 }//fin de la clase SentenciasAsignacion
 
 class SentenciaLlamadaFuncion extends Nodo {
+    LlamadaFuncion llamadaFuncion;
     //constructor
     public SentenciaLlamadaFuncion(Stack<ElementoPila> pila) {
         super();
@@ -661,8 +680,21 @@ class SentenciaLlamadaFuncion extends Nodo {
         pila.pop();
         pila.pop();
         pila.pop();
-        hijos.add(pila.pop().getNodo());
+        llamadaFuncion = (LlamadaFuncion) pila.pop().getNodo();
+        hijos.add(llamadaFuncion);
+
+        this.muestra();
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        if(llamadaFuncion != null)
+        {
+            llamadaFuncion.tamSangria++;
+            llamadaFuncion.sangria();
+            llamadaFuncion.muestra();
+        }
+    }
 }//fin de la clase SentenciaLlamadaFuncion
 
 class SentenciaValorRegresa extends Nodo {

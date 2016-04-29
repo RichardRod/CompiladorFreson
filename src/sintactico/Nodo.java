@@ -1,5 +1,7 @@
 package sintactico;
 
+import principal.Ventana;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class Nodo
     //public static TablaSimbolos tablaSimbolos;
     //public static String ambito;
 
+
     public List<Nodo> hijos = new LinkedList<>();
 
     //constructor sin parametros
@@ -25,11 +28,13 @@ public class Nodo
         this.simbolo = simbolo;
     }//fin del constrcutor parametrizado
 
-    public void sangria()
+    public static void sangria()
     {
+
         for(int i = 0; i < tamSangria; i++){
             System.out.print(" ");
         }
+
     }
 
     public void muestra()

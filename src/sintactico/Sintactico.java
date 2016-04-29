@@ -331,10 +331,11 @@ public class Sintactico {
 
                     case 48:
                         nodo = new OperadorRelacional(pila);
-                        Ventana.txtArbol.append("<Relacional> ");
-                        Ventana.txtArbol.append(nodo.hijos.get(0).simbolo + "\n");
-                        Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(0).hijos.get(0).simbolo + "\n");
-                        Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(1).hijos.get(0).simbolo + "\n");
+
+                        //Ventana.txtArbol.append("<Relacional> ");
+                        //Ventana.txtArbol.append(nodo.hijos.get(0).simbolo + "\n");
+                       // Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(0).hijos.get(0).simbolo + "\n");
+                        //Ventana.txtArbol.append("\t" + nodo.hijos.get(0).hijos.get(1).hijos.get(0).simbolo + "\n");
                         System.out.print("<Relacional> ");
                         System.out.println(nodo.hijos.get(0).simbolo);
 
