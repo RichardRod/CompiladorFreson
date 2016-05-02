@@ -3,6 +3,7 @@ package sintactico;
 import lexico.Lexico;
 import lexico.TipoSimbolo;
 import principal.Ventana;
+import semantico.TablaSimbolos;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -110,19 +111,7 @@ public class Sintactico {
                     pila.pop();
                     arbolSintactico = pila.pop().getNodo();
 
-                    if(arbolSintactico != null)
-                    {
-                        System.out.println("Arbol");
-                        System.out.println("\n");
-                        //System.out.println(arbolSintactico.simbolo);
-                        //arbolSintactico.muestra();
-                        arbolSintactico.muestra();
-                        System.out.println("\n\n\n");
-                    }
-                    else
-                    {
-                        System.out.println("Arbol Vacio");
-                    }
+                    TablaSimbolos.mostrar();
                     break;
                 }//fin de if
 

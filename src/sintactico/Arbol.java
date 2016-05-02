@@ -1,6 +1,9 @@
 package sintactico;
 
 import principal.Ventana;
+import semantico.DefinicionVariable;
+import semantico.Parametro;
+import semantico.TablaSimbolos;
 
 import java.util.List;
 import java.util.Stack;
@@ -47,7 +50,7 @@ class Identificador extends Nodo {
     @Override
     public void muestra() {
         sangria();
-        System.out.println("<Chuchita> " + simbolo);
+        System.out.println("<Identificador> " + simbolo);
     }
 }//fin de la clase Identificador
 
@@ -167,7 +170,7 @@ class ExpresionOperadoresBinarios extends Nodo {
 
     public ExpresionOperadoresBinarios(Stack<ElementoPila> pila) {
         super();
-        simbolo = "<Expresion>";
+        simbolo = "<ExpresionJEfa>";
 
         pila.pop();
         expresionDerecha = pila.pop().getNodo();
@@ -215,17 +218,25 @@ class ExpresionOperadoresBinarios extends Nodo {
 }//fin de la clase ExpresionOperadoresBinarios
 
 class OperadorAdicion extends ExpresionOperadoresBinarios {
+
+    //constructor
     public OperadorAdicion(Stack<ElementoPila> pila) {
         super(pila);
-    }
+    }//fin del constructor
 
+    @Override
+    public void muestra() {
+        System.out.println("<Expresion> " + hijos.get(0).simbolo);
+        System.out.println("\t<Izquierda> " + hijos.get(0).hijos.get(0).hijos.get(0).simbolo);
+        System.out.println("\t<Derecha> " + hijos.get(0).hijos.get(1).hijos.get(0).simbolo);
+    }//fin del metodo muestra
 
 }//fin de la clase OperadorAdicion
 
 class OperadorAdicionDos extends Nodo {
     public OperadorAdicionDos(Stack<ElementoPila> pila) {
         super();
-        simbolo = "<Expresion>";
+        simbolo = "<ExpresionOperadorAdicionDos>";
 
         pila.pop();
         Nodo expresion = pila.pop().getNodo();
@@ -238,19 +249,26 @@ class OperadorAdicionDos extends Nodo {
 }//fin de la clase OperadorAdicionDos
 
 class OperadorMultiplicacion extends ExpresionOperadoresBinarios {
+
+    //constructor
     public OperadorMultiplicacion(Stack<ElementoPila> pila) {
         super(pila);
+    }//fin del constructor
 
-    }
+    @Override
+    public void muestra() {
+        System.out.println("<Expresion> " + hijos.get(0).simbolo);
+        System.out.println("\t<Izquierda> " + hijos.get(0).hijos.get(0).hijos.get(0).simbolo);
+        System.out.println("\t<Derecha> " + hijos.get(0).hijos.get(1).hijos.get(0).simbolo);
+    }//fin del metodo muestra
+
 }//fin de la clase OperadorMultiplicacion
 
 class OperadorRelacional extends ExpresionOperadoresBinarios {
 
     public OperadorRelacional(Stack<ElementoPila> pila) {
         super(pila);
-
     }
-
 
 }//fin de la clase OperadorRelacional
 
@@ -269,13 +287,14 @@ class OperadorAnd extends ExpresionOperadoresBinarios {
 class OperadorIgualdad extends ExpresionOperadoresBinarios {
     public OperadorIgualdad(Stack<ElementoPila> pila) {
         super(pila);
+        System.out.println("Aqui toy");
     }
 }//fin de la clase
 
 class OperadorNot extends Nodo {
     public OperadorNot(Stack<ElementoPila> pila) {
         super();
-        simbolo = "<Expresion>";
+        simbolo = "<ExpresionOpNot>";
 
         pila.pop();
         Nodo expresion = pila.pop().getNodo();
@@ -338,8 +357,11 @@ class Variables extends Nodo {
         System.out.println("\t<Tipo> " + tipo);
         System.out.println("\t<Identificador> " + identificador);
 
+        TablaSimbolos.agregarVariable(new DefinicionVariable(tipo, identificador, "Local"));
+
         for (int i = 0; i < listaVariables.size(); i++) {
             System.out.println("\t<Identificador> " + listaVariables.get(i).hijos.get(i).simbolo);
+            TablaSimbolos.agregarVariable(new DefinicionVariable(tipo, listaVariables.get(i).hijos.get(i).simbolo, "Local"));
         }
 
 
@@ -472,11 +494,14 @@ class Parametros extends Nodo {
         System.out.println("<Tipo> " + tipo);
         sangria();
         System.out.println("<Identificador> " + identificador);
+        TablaSimbolos.agregarVariable(new Parametro(tipo, identificador));
         for (Nodo parametro : listaParametros) {
             sangria();
             System.out.println("<Tipo> " + parametro.hijos.get(0).simbolo);
             sangria();
             System.out.println("<Identificador> " + parametro.hijos.get(1).simbolo);
+
+            TablaSimbolos.agregarVariable(new Parametro(parametro.hijos.get(0).simbolo, parametro.hijos.get(1).simbolo));
         }
 
     }
@@ -533,7 +558,7 @@ class LlamadaFuncion extends Nodo {
 
     String identificador;
     String parentesisInicio;
-    Nodo argumentos;
+    ListaArgumentos argumentos;
     String parentesisFin;
     //constructor
     public LlamadaFuncion(Stack<ElementoPila> pila) {
@@ -544,7 +569,7 @@ class LlamadaFuncion extends Nodo {
         pila.pop();
         parentesisFin = pila.pop().getElemento();
         pila.pop();
-        argumentos = pila.pop().getNodo();
+        argumentos = (ListaArgumentos) pila.pop().getNodo();
         pila.pop();
         parentesisInicio =  pila.pop().getElemento();
         pila.pop();
@@ -558,23 +583,25 @@ class LlamadaFuncion extends Nodo {
         System.out.println("\t<Identificador> " + identificador);
         System.out.println("\t" + argumentos.hijos.get(0).hijos.get(0).simbolo);
 
-
-        hijos.add(new Nodo(identificador));
-        hijos.add(new Nodo("("));
-        hijos.add(argumentos);
-        hijos.add(new Nodo(")"));
     }//fin del constructor
 
     @Override
     public void muestra() {
         System.out.println("<LLamadaFuncion>");
+        tamSangria++;
         sangria();
         System.out.println("<Identificador> " + identificador);
         sangria();
         System.out.println("<Argumentos>");
         sangria();
         System.out.println("<ParentesisInicio> " + parentesisInicio);
-
+        sangria();
+        if(argumentos != null)
+        {
+            argumentos.tamSangria++;
+            sangria();
+            argumentos.muestra();
+        }
 
         sangria();
         System.out.println("<ParentesisFin> " + parentesisFin);
@@ -582,6 +609,10 @@ class LlamadaFuncion extends Nodo {
 }//fin de la clase LlamadaFuncion
 
 class ListaArgumentos extends Nodo {
+
+    Nodo listaArgumentos;
+    Nodo expresion;
+
     //constructor
     public ListaArgumentos(Stack<ElementoPila> pila) {
         super();
@@ -589,17 +620,28 @@ class ListaArgumentos extends Nodo {
         simbolo = "<ListaArgumentos>";
 
         pila.pop();
-        Nodo listaArgumentos = pila.pop().getNodo();
+        listaArgumentos = pila.pop().getNodo();
         pila.pop();
-        Nodo expresion = pila.pop().getNodo();
+        expresion = pila.pop().getNodo();
 
         hijos.add(expresion);
         for (Nodo nodo : listaArgumentos.hijos) {
             hijos.add(nodo);
             System.out.println(nodo.simbolo);
         }//fin de for
-        //System.out.println("Hijos: " + hijos.get(0).simbolo);
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+        sangria();
+        System.out.println("<ListaArgumentos>");
+
+        System.out.println(listaArgumentos.simbolo);
+        sangria();
+        System.out.println(expresion.simbolo);
+
+        System.out.println(expresion.hijos.get(0).simbolo);
+    }
 }//fin de la clase ListaArgumentos
 
 class ListaArgumentosDos extends Nodo {
@@ -607,7 +649,9 @@ class ListaArgumentosDos extends Nodo {
     public ListaArgumentosDos(Stack<ElementoPila> pila) {
         super();
 
-        simbolo = "<ListaArgumentos>";
+        System.out.println("Llamada el duques");
+
+        simbolo = "<ListaArgumentosDos>";
 
         pila.pop();
         Nodo listaArgumentos = pila.pop().getNodo();
@@ -640,6 +684,9 @@ class Sentencias extends Nodo {
 }//fin de la clase Sentencias
 
 class SentenciasAsignacion extends Nodo {
+
+    String identificador;
+    Nodo expresion;
     //constructor
     public SentenciasAsignacion(Stack<ElementoPila> pila) {
         super();
@@ -649,11 +696,11 @@ class SentenciasAsignacion extends Nodo {
         pila.pop();
         pila.pop();
         pila.pop();
-        Nodo expresion = pila.pop().getNodo();
+        expresion =  pila.pop().getNodo();
         pila.pop();
+        pila.pop(); //igual
         pila.pop();
-        pila.pop();
-        String identificador = pila.pop().getElemento();
+        identificador = pila.pop().getElemento();
 
         hijos.add(new Nodo(identificador));
         hijos.add(new Nodo("="));
@@ -663,10 +710,31 @@ class SentenciasAsignacion extends Nodo {
         Ventana.txtArbol.append("\t<Identificador> " + identificador + "\n");
         Ventana.txtArbol.append("\t" + expresion.hijos.get(0).simbolo + "\n");
 
-        System.out.println("<Asignacion>");
-        System.out.println("\t<Identificador> " + identificador);
-        System.out.println("\t" + expresion.hijos.get(0).simbolo);
+
+        this.muestra();
     }//fin del constructor
+
+    @Override
+    public void muestra() {
+
+        System.out.println("<Asignacion> ");
+        System.out.println("\t<Identificador> " + identificador);
+        System.out.println("\t\t< = >");
+        System.out.println("\t" + expresion.hijos.get(0).simbolo);
+        System.out.println("Cuajo: " + expresion.hijos.size());
+        System.out.println("MM: " + expresion.simbolo);
+
+        if(expresion instanceof OperadorAdicion)
+        {
+            expresion.muestra();
+        }
+
+        if(expresion instanceof OperadorMultiplicacion)
+        {
+            expresion.muestra();
+        }
+
+    }
 }//fin de la clase SentenciasAsignacion
 
 class SentenciaLlamadaFuncion extends Nodo {

@@ -1,11 +1,65 @@
 package semantico;
 
 
+import principal.Ventana;
+
+import javax.swing.table.DefaultTableModel;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TablaSimbolos {
 
-    protected List<ElementoTabla> tabla;
+    //atributos
+    private static LinkedList<Object> listaVariables = new LinkedList<>();
+
+    public static void agregarVariable(Object variable) {
+        if (variable instanceof Parametro) {
+            variable = (Parametro) variable;
+            listaVariables.add(variable);
+        }
+        if (variable instanceof DefinicionVariable) {
+            listaVariables.add(variable);
+        }
+    }
+
+    public static void mostrar() {
+        DefaultTableModel modelo = (DefaultTableModel) Ventana.tablaSimbolos.getModel();
+        Object[] filas = new Object[3];
+
+        for (Object variable : listaVariables) {
+            if (variable instanceof Parametro) {
+                //System.out.println(((Parametro) variable).getIdentificador());
+
+                filas[0] = ((Parametro) variable).getTipo();
+                filas[1] = ((Parametro) variable).getIdentificador();
+                filas[2] = ((Parametro) variable).getAmbito();
+
+                modelo.addRow(filas);
+                Ventana.tablaSimbolos.setModel(modelo);
+
+            }
+
+            if (variable instanceof DefinicionVariable) {
+
+                filas[0] = ((DefinicionVariable) variable).getTipo();
+                filas[1] = ((DefinicionVariable) variable).getIdentificador();
+                filas[2] = ((DefinicionVariable) variable).getAmbito();
+
+                modelo.addRow(filas);
+                Ventana.tablaSimbolos.setModel(modelo);
+
+            }
+        }
+
+    }//fin del metodo mostrar
+
+    public static void limpiar() {
+        listaVariables.clear();
+    }
+
+
+
+    /*protected List<ElementoTabla> tabla;
     public List<String> listaErrores;
     public Variable variableLocal;
     public Variable variableGlobal;
@@ -40,14 +94,13 @@ public class TablaSimbolos {
 
 
 
-
+*/
 
 
 }//fin de la clase TablaSimbolos
 
-class ElementoTabla
-{
-    //atributos
+class ElementoTabla {
+   /* //atributos
     private String simbolo;
     private char tipo;
 
@@ -85,12 +138,11 @@ class ElementoTabla
     public void muestra()
     {
 
-    }
+    }*/
 }//fin de la clase ElementoTabla
 
-class Variable extends ElementoTabla
-{
-    protected boolean local;
+class Variable extends ElementoTabla {
+    /*protected boolean local;
     private String ambito;
 
     public Variable(char tipo, String simbolo, String ambito)
@@ -128,12 +180,11 @@ class Variable extends ElementoTabla
             System.out.println("Local");
         else
             System.out.println("Global");
-    }
+    }*/
 }//fin de la clase Variable
 
-class Funcion extends ElementoTabla
-{
-    private String parametros;
+class Funcion extends ElementoTabla {
+    /*private String parametros;
 
     public Funcion(char tipo, String simbolo, String parametros)
     {
@@ -158,20 +209,12 @@ class Funcion extends ElementoTabla
     @Override
     public void muestra() {
         System.out.println("Funcion: " + getSimbolo() + " Tipo: " + getTipo() + " Parametros: " + parametros);
-    }
+    }*/
 }//fin de la clase Funcion
 
-class DefVar
-{
+
+class DefFunc {
 
 }
 
-class DefFunc
-{
 
-}
-
-class Parametro
-{
-
-}

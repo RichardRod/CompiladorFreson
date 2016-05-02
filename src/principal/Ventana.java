@@ -1,5 +1,7 @@
 package principal;
 
+import javafx.scene.control.Tab;
+import semantico.TablaSimbolos;
 import sintactico.Sintactico;
 
 import javax.swing.*;
@@ -14,7 +16,7 @@ import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Ventana extends JFrame implements ActionListener, KeyListener {
+public class Ventana extends JFrame implements ActionListener {
 
     //atributos
     private Font fuente;
@@ -28,14 +30,17 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
     public static JTextArea txtArbol;
     private JTable tablaResultados;
     public static JTable tablaSimbolos;
+    public static JTable tablaErrores;
     private JScrollPane desplazamientoTabla;
     private JScrollPane desplazamientoTexto;
     private JScrollPane desplazamientoArbol;
     private JScrollPane desplazamientoSimbolos;
+    private JScrollPane desplazamientoErrores;
 
     private JTabbedPane panelFichas;
     private JPanel panelPila;
     private JPanel panelArbol;
+    private JPanel panelSemantico;
 
     public Ventana() {
         super("Compilador");
@@ -65,7 +70,6 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
         txtFuente = new JTextArea();
         txtFuente.setFont(fuente);
         txtFuente.setBounds(10, 10, 1260, 400);
-        txtFuente.addKeyListener(this);
         panelContenedor.add(txtFuente);
 
         desplazamientoTexto = new JScrollPane(txtFuente);
@@ -93,6 +97,20 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
         desplazamientoArbol = new JScrollPane(txtArbol);
         panelArbol.add(BorderLayout.CENTER, desplazamientoArbol);
         panelFichas.addTab("Arbol", panelArbol);
+
+        panelSemantico = new JPanel();
+        panelSemantico.setLayout(new BorderLayout());
+        tablaSimbolos = new JTable(new DefaultTableModel(new Object[][]{},
+                new String[]{"Tipo", "Identificador", "Ambito"}));
+        panelSemantico.add(BorderLayout.EAST, tablaSimbolos);
+        desplazamientoSimbolos = new JScrollPane(tablaSimbolos);
+        panelSemantico.add(BorderLayout.EAST, desplazamientoSimbolos);
+        tablaErrores = new JTable(new DefaultTableModel(new Object[][]{},
+                new String[]{"Linea", "Error"}));
+        panelSemantico.add(BorderLayout.CENTER, tablaErrores);
+        desplazamientoErrores = new JScrollPane(tablaErrores);
+        panelSemantico.add(BorderLayout.CENTER, desplazamientoErrores);
+        panelFichas.addTab("Semantico", panelSemantico);
 
         panelFichas.setBounds(0, 420, 1280, 250);
         add(panelFichas);
@@ -143,11 +161,19 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
     private void limpiar()
     {
         DefaultTableModel modeloTabla = (DefaultTableModel)tablaResultados.getModel();
+        DefaultTableModel modeloTablaDos = (DefaultTableModel) tablaSimbolos.getModel();
 
         while(modeloTabla.getRowCount() > 0)
         {
             modeloTabla.removeRow(0);
         }
+
+        while(modeloTablaDos.getRowCount() > 0)
+        {
+            modeloTablaDos.removeRow(0);
+        }
+
+        TablaSimbolos.limpiar();
     }
 
     private void abrir()
@@ -179,20 +205,5 @@ public class Ventana extends JFrame implements ActionListener, KeyListener {
         sintactico.analisisSintactico();
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        //System.out.println("Uno");
-    }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        String textoFuente = txtFuente.getText();
-
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        //System.out.println("tres");
-    }
 }//fin de la clase Ventana
